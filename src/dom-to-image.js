@@ -154,9 +154,43 @@
             .then(util.makeImage)
             .then(util.delay(100))
             .then(function (image) {
-                var canvas = newCanvas(domNode);
-                canvas.getContext('2d').drawImage(image, 0, 0);
-                return canvas;
+
+                console.log("dom-to-image");
+                console.log("dom-to-image");
+                console.log("dom-to-image");
+                console.log("dom-to-image");
+                console.log("dom-to-image");
+                console.log(options);
+
+
+                var image_width = image.width;
+                var image_height = image.height;
+
+                if (!options.resize) {
+                    var canvas = newCanvas(domNode);
+                    canvas.getContext('2d').drawImage(image, 0, 0);
+                    return canvas;
+                }
+                if(options.resize && !options.resize_fit){
+                    var resize_canvas = document.createElement('canvas');
+                    resize_canvas.width = options.resize_width;
+                    resize_canvas.height = options.resize_height;
+                    resize_canvas.getContext('2d').drawImage(image, 0, 0,options.resize_width,options.resize_height);
+                    return resize_canvas;
+                }
+                if(options.resize && options.resize_fit){
+
+                    var ratio = image_width > image_height ? options.resize_width / image_width : options.resize_height/ image_height;
+
+                    var fit_width = Math.round(ratio * image_width);
+                    var fit_height = Math.round(ratio * image_height);
+
+                    var resize_canvas = document.createElement('canvas');
+                    resize_canvas.width = fit_width;
+                    resize_canvas.height = fit_height;
+                    resize_canvas.getContext('2d').drawImage(image, 0, 0, fit_width,fit_height);
+                    return resize_canvas;
+                }
             });
 
         function newCanvas(domNode) {
